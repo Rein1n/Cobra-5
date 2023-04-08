@@ -1,0 +1,81 @@
+import 'dotenv/config';
+import {
+	Client,
+	Collection,
+	Events,
+	GatewayIntentBits,
+	REST,
+	Routes,
+} from 'discord.js';
+import type {
+	ChatInputCommandInteraction,
+	SlashCommandBuilder,
+} from 'discord.js';
+
+import ping from './commands/ping.js';
+import help from './commands/help.js';
+const { token, client_id } = process.env;
+const commands = [];
+const cmds = new Collection<string, { data: SlashCommandBuilder, execute: (interaction: ChatInputCommandInteraction) => Promise<void> }>();
+
+commands.push(ping.data.toJSON());
+commands.push(help.data.toJSON());
+cmds.set('ping', ping);
+cmds.set('help', help);
+
+const rest = new REST({ version: '10' }).setToken(token as string);
+// Create a new client instance
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
+(async () => {
+	try {
+		console.log(`Started refreshing ${commands.length} application (/) commands.`);
+
+		// The put method is used to fully refresh all commands in the guild with the current set
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const data = await rest.put(
+			Routes.applicationCommands(client_id as string),
+			{ body: commands },
+		);
+
+		console.log(`Successfully reloaded ${commands.length} application (/) commands.`);
+	}
+	catch (error) {
+		// And of course, make sure you catch and log any errors!
+		console.error(error);
+	}
+})();
+
+// When the client is ready, run this code (only once)
+// We use 'c' for the event parameter to keep it separate from the already defined 'client'
+client.once(Events.ClientReady, c => {
+	console.log(`Ready! Logged in as ${c.user.tag}`);
+	if (client.user) {
+		client.user.setActivity('with TypeScript');
+	}
+});
+
+client.on(Events.InteractionCreate, async interaction => {
+	if (!interaction.isChatInputCommand()) return;
+
+	const command = cmds.get(interaction.commandName);
+
+	if (!command) return;
+
+	try {
+		await command.execute(interaction);
+	}
+	catch (error) {
+		console.error(error);
+		if (interaction.replied || interaction.deferred) {
+			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+		}
+		else {
+			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		}
+	}
+});
+
+// Log in to Discord with your client's token
+
+client.login(token);
