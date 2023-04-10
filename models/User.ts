@@ -4,6 +4,7 @@ import { sequelize } from '../index.js';
 class User extends Model {
 	declare RblxID: string;
 	declare points: number;
+	declare GroupID: string;
 }
 
 User.init ({
@@ -12,5 +13,8 @@ User.init ({
 	},
 	points: {
 		type: DataType.INTEGER,
+	},
+	GroupID: {
+		type: DataType.STRING,
 	},
 },	{ sequelize });
