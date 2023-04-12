@@ -1,14 +1,13 @@
-import { Model, DataType } from 'sequelize-typescript';
-import { sequelize } from '../index.js';
+import { DataType, Sequelize } from 'sequelize-typescript';
 
-class User extends Model {
-	declare DiscordID: string;
-	declare RblxID: string;
-	declare points: number;
-	declare GroupID: string;
-}
+const sequelize = new Sequelize('database', 'user', 'password', {
+	host: 'localhost',
+	dialect: 'sqlite',
+	logging: false,
+	storage: 'database.sqlite',
+});
 
-User.init ({
+const User = sequelize.define('Users', {
 	DiscordID: {
 		type: DataType.STRING,
 	},
@@ -21,4 +20,11 @@ User.init ({
 	GroupID: {
 		type: DataType.STRING,
 	},
-},	{ sequelize });
+}, {
+	timestamps: false,
+});
+
+export function userInit() {
+	User.sync({ force: true });
+	console.log('User synced');
+}

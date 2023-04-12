@@ -1,16 +1,24 @@
-import { Model, DataType } from 'sequelize-typescript';
-import { sequelize } from '../index.js';
+import { DataType, Sequelize } from 'sequelize-typescript';
 
-class Group extends Model {
-	declare GroupID: string;
-	declare GuildID: string;
-}
+const sequelize = new Sequelize('database', 'user', 'password', {
+	host: 'localhost',
+	dialect: 'sqlite',
+	logging: false,
+	storage: 'database.sqlite',
+});
 
-Group.init ({
+const Group = sequelize.define('Group', {
 	RblxID: {
 		type: DataType.STRING,
 	},
 	GuildID: {
 		type: DataType.STRING,
 	},
-},	{ sequelize });
+}, {
+	timestamps: false,
+});
+
+export function groupInit() {
+	Group.sync({ force: true });
+	console.log('Group synced');
+}
