@@ -14,6 +14,7 @@
     "@types/node": "^18.15.11",
     "discord.js": "^14.9.0",
     "dotenv": "^16.0.3",
+    "noblox.js": "^4.14.1",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.30.0",
     "sequelize-typescript": "^2.1.5",

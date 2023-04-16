@@ -15,14 +15,17 @@ import type {
 
 import ping from './commands/ping.js';
 import help from './commands/help.js';
+import getRblxUser from './commands/getRblxUser.js';
 const { token, client_id } = process.env;
 const commands = [];
 const cmds = new Collection<string, { data: SlashCommandBuilder, execute: (interaction: ChatInputCommandInteraction) => Promise<void> }>();
 
 commands.push(ping.data.toJSON());
 commands.push(help.data.toJSON());
+commands.push(getRblxUser.data.toJSON);
 cmds.set('ping', ping);
 cmds.set('help', help);
+cmds.set('getRblxUser', getRblxUser);
 
 const rest = new REST({ version: '10' }).setToken(token as string);
 // Create a new client instance
