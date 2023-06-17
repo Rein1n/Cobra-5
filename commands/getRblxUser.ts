@@ -1,16 +1,33 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import noblox from 'noblox.js';
-const getRblxUser = {
+const getrblxuser = {
 	data: new SlashCommandBuilder()
-		.setName('Get Roblox user')
-		.setDescription('Returns the info of a Roblox user.')
-		.addIntegerOption(option =>
-			option.setName('ID')
-				.setDescription('The Roblox ID.')),
+		.setName('getrblxuser')
+		.setDescription('Gets info about a user')
+		.addIntegerOption(Option =>
+			Option.setName('id')
+				.setDescription('Uses an ID')
+				.setRequired(true)),
 	async execute(interaction: any) {
-		const rblxId = interaction.option.getInt('ID');
-		await interaction.reply({ content: rblxId });
+		const id = interaction.options.getInteger('id');
+		const info = await noblox.getPlayerInfo(id);
+		const thumbnail = await noblox.getPlayerThumbnail(id, 720, 'png', false, 'headshot');
+		console.log(thumbnail.at(0)?.imageUrl);
+		const embed = new EmbedBuilder()
+			.setTitle(`${info.username} (aka ${info.displayName})`)
+			.setURL(`https://www.roblox.com/users/${id}`)
+			.setDescription(`${info.blurb}`)
+			.setThumbnail(`${thumbnail.at(0)?.imageUrl}`)
+			.addFields(
+				{ name: 'ID', value: `${id}` },
+				{ name: 'Friends', value: `${info.friendCount}` },
+				{ name: 'Following', value: `${info.followingCount}` },
+				{ name: 'Followers', value: `${info.followerCount}` },
+				{ name: 'Join Date', value: `${info.joinDate.toDateString()}` },
+			);
+		console.log(info);
+		await interaction.reply({ embeds: [embed] });
 	},
 };
 
-export default getRblxUser;
+export default getrblxuser;

@@ -15,17 +15,18 @@ import type {
 
 import ping from './commands/ping.js';
 import help from './commands/help.js';
-import getRblxUser from './commands/getRblxUser.js';
+import getrblxuser from './commands/getrblxuser.js';
 const { token, client_id } = process.env;
 const commands = [];
-const cmds = new Collection<string, { data: SlashCommandBuilder, execute: (interaction: ChatInputCommandInteraction) => Promise<void> }>();
+const cmds = new Collection<string, { data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandBuilder, execute: (interaction: ChatInputCommandInteraction) => Promise<void> }>();
 
 commands.push(ping.data.toJSON());
 commands.push(help.data.toJSON());
-commands.push(getRblxUser.data.toJSON);
+commands.push(getrblxuser.data.toJSON());
+console.log(getrblxuser.data.toJSON());
 cmds.set('ping', ping);
 cmds.set('help', help);
-cmds.set('getRblxUser', getRblxUser);
+cmds.set('getrblxuser', getrblxuser);
 
 const rest = new REST({ version: '10' }).setToken(token as string);
 // Create a new client instance
@@ -71,6 +72,8 @@ client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
 
 	const command = cmds.get(interaction.commandName);
+
+	console.log(command);
 
 	if (!command) return;
 
