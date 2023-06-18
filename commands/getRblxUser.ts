@@ -25,7 +25,6 @@ const getrblxuser = {
 				const id = interaction.options.getString('id');
 				const info = await noblox.getPlayerInfo(id);
 				const thumbnail = await noblox.getPlayerThumbnail(id, 720, 'png', false, 'headshot');
-				console.log(thumbnail.at(0)?.imageUrl);
 				embed = new EmbedBuilder()
 					.setTitle(`${info.username} (aka ${info.displayName})`)
 					.setURL(`https://www.roblox.com/users/${id}`)
@@ -38,15 +37,11 @@ const getrblxuser = {
 						{ name: 'Followers', value: `${info.followerCount}` },
 						{ name: 'Join Date', value: `${info.joinDate.toDateString()}` },
 					);
-				console.log(info);
 			}
 			else if (interaction.options.getSubcommand() === 'username') {
 				const id = await noblox.getIdFromUsername(interaction.options.getString('username'));
-				console.log(Number(id));
 				const info = await noblox.getPlayerInfo(Number(id));
-				console.log(info);
 				const thumbnail = await noblox.getPlayerThumbnail(id, 720, 'png', false, 'headshot');
-				console.log(thumbnail.at(0)?.imageUrl);
 				embed = new EmbedBuilder()
 					.setTitle(`${info.username} (aka ${info.displayName})`)
 					.setURL(`https://www.roblox.com/users/${id}`)
