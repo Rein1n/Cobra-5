@@ -4,29 +4,67 @@ const getrblxuser = {
 	data: new SlashCommandBuilder()
 		.setName('getrblxuser')
 		.setDescription('Gets info about a user')
-		.addIntegerOption(Option =>
-			Option.setName('id')
+		.addSubcommand(subcmd =>
+			subcmd.setName('id')
 				.setDescription('Uses an ID')
-				.setRequired(true)),
+				.addStringOption(option =>
+					option.setName('id')
+						.setDescription('Uses an ID')
+						.setRequired(true)))
+		.addSubcommand(subcmd =>
+			subcmd.setName('username')
+				.setDescription('Uses a username')
+				.addStringOption(option =>
+					option.setName('username')
+						.setDescription('Uses a username')
+						.setRequired(true))),
 	async execute(interaction: any) {
-		const id = interaction.options.getInteger('id');
-		const info = await noblox.getPlayerInfo(id);
-		const thumbnail = await noblox.getPlayerThumbnail(id, 720, 'png', false, 'headshot');
-		console.log(thumbnail.at(0)?.imageUrl);
-		const embed = new EmbedBuilder()
-			.setTitle(`${info.username} (aka ${info.displayName})`)
-			.setURL(`https://www.roblox.com/users/${id}`)
-			.setDescription(`${info.blurb}`)
-			.setThumbnail(`${thumbnail.at(0)?.imageUrl}`)
-			.addFields(
-				{ name: 'ID', value: `${id}` },
-				{ name: 'Friends', value: `${info.friendCount}` },
-				{ name: 'Following', value: `${info.followingCount}` },
-				{ name: 'Followers', value: `${info.followerCount}` },
-				{ name: 'Join Date', value: `${info.joinDate.toDateString()}` },
-			);
-		console.log(info);
-		await interaction.reply({ embeds: [embed] });
+		try {
+			let embed;
+			if (interaction.options.getSubcommand() === 'id') {
+				const id = interaction.options.getString('id');
+				const info = await noblox.getPlayerInfo(id);
+				const thumbnail = await noblox.getPlayerThumbnail(id, 720, 'png', false, 'headshot');
+				console.log(thumbnail.at(0)?.imageUrl);
+				embed = new EmbedBuilder()
+					.setTitle(`${info.username} (aka ${info.displayName})`)
+					.setURL(`https://www.roblox.com/users/${id}`)
+					.setDescription(`${info.blurb}`)
+					.setThumbnail(`${thumbnail.at(0)?.imageUrl}`)
+					.addFields(
+						{ name: 'ID', value: `${id}` },
+						{ name: 'Friends', value: `${info.friendCount}` },
+						{ name: 'Following', value: `${info.followingCount}` },
+						{ name: 'Followers', value: `${info.followerCount}` },
+						{ name: 'Join Date', value: `${info.joinDate.toDateString()}` },
+					);
+				console.log(info);
+			}
+			else if (interaction.options.getSubcommand() === 'username') {
+				const id = await noblox.getIdFromUsername(interaction.options.getString('username'));
+				console.log(Number(id));
+				const info = await noblox.getPlayerInfo(Number(id));
+				console.log(info);
+				const thumbnail = await noblox.getPlayerThumbnail(id, 720, 'png', false, 'headshot');
+				console.log(thumbnail.at(0)?.imageUrl);
+				embed = new EmbedBuilder()
+					.setTitle(`${info.username} (aka ${info.displayName})`)
+					.setURL(`https://www.roblox.com/users/${id}`)
+					.setDescription(`${info.blurb}`)
+					.setThumbnail(`${thumbnail.at(0)?.imageUrl}`)
+					.addFields(
+						{ name: 'ID', value: `${id}` },
+						{ name: 'Friends', value: `${info.friendCount}` },
+						{ name: 'Following', value: `${info.followingCount}` },
+						{ name: 'Followers', value: `${info.followerCount}` },
+						{ name: 'Join Date', value: `${info.joinDate.toDateString()}` },
+					);
+			}
+			await interaction.reply({ embeds: [embed] });
+		}
+		catch (error) {
+			await interaction.reply('User does not exist (Invalid ID/Username).');
+		}
 	},
 };
 

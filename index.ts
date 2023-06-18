@@ -11,6 +11,7 @@ import {
 import type {
 	ChatInputCommandInteraction,
 	SlashCommandBuilder,
+	SlashCommandSubcommandsOnlyBuilder,
 } from 'discord.js';
 
 import ping from './commands/ping.js';
@@ -18,7 +19,7 @@ import help from './commands/help.js';
 import getrblxuser from './commands/getrblxuser.js';
 const { token, client_id } = process.env;
 const commands = [];
-const cmds = new Collection<string, { data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandBuilder, execute: (interaction: ChatInputCommandInteraction) => Promise<void> }>();
+const cmds = new Collection<string, { data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder, execute: (interaction: ChatInputCommandInteraction) => Promise<void> }>();
 
 commands.push(ping.data.toJSON());
 commands.push(help.data.toJSON());
