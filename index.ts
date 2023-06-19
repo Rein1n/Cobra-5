@@ -17,6 +17,7 @@ import type {
 import ping from './commands/ping.js';
 import help from './commands/help.js';
 import getrblxuser from './commands/getrblxuser.js';
+import verify from './commands/verify.js';
 const { token, client_id } = process.env;
 const commands = [];
 const cmds = new Collection<string, { data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'> | SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder, execute: (interaction: ChatInputCommandInteraction) => Promise<void> }>();
@@ -24,10 +25,11 @@ const cmds = new Collection<string, { data: Omit<SlashCommandBuilder, 'addSubcom
 commands.push(ping.data.toJSON());
 commands.push(help.data.toJSON());
 commands.push(getrblxuser.data.toJSON());
-console.log(getrblxuser.data.toJSON());
+commands.push(verify.data.toJSON());
 cmds.set('ping', ping);
 cmds.set('help', help);
 cmds.set('getrblxuser', getrblxuser);
+cmds.set('verify', verify);
 
 const rest = new REST({ version: '10' }).setToken(token as string);
 // Create a new client instance
@@ -73,8 +75,6 @@ client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
 
 	const command = cmds.get(interaction.commandName);
-
-	console.log(command);
 
 	if (!command) return;
 
