@@ -35,8 +35,6 @@ const verify = {
 				await interaction.reply({ embeds: [embed] });
 			})
 			.catch(async (error) => {
-				console.log(api);
-				console.log(error.response.status);
 				if (error.response.status == 404) {
 					const badEmbed = new EmbedBuilder()
 						.setTitle('Learn how to verify')
