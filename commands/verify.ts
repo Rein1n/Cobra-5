@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import axios from 'axios';
 import noblox from 'noblox.js';
+import 'dotenv/config';
 const verify = {
 	data: new SlashCommandBuilder()
 		.setName('verify')
@@ -10,12 +11,13 @@ const verify = {
 				.setDescription('selects a user')
 				.setRequired(false)),
 	async execute(interaction: any) {
+		const { rblxToken } = process.env;
 		const guild = interaction.guild;
 		const user = interaction.options.getUser('user') ?? interaction.user;
 		const api = axios.create({
 			baseURL: 'https://api.rowifi.xyz/v2',
 			headers: {
-				'Authorization': 'Bot 8fjwAqOiQnMKUk58',
+				'Authorization': `Bot ${rblxToken}`,
 			},
 		});
 
@@ -36,12 +38,12 @@ const verify = {
 				console.log(api);
 				console.log(error.response.status);
 				if (error.response.status == 404) {
-					const embed = new EmbedBuilder()
+					const badEmbed = new EmbedBuilder()
 						.setTitle('Learn how to verify')
 						.setColor('#c70a0a')
 						.setURL('https://rowifi.xyz/docs/verification/')
 						.setDescription(`${user} was not found.\nOur backend utilizes RoWifi for verification, after you verify with them, run the \`/verify\` command again. `);
-					await interaction.reply({ embeds: [embed] });
+					await interaction.reply({ embeds: [badEmbed] });
 				}
 			});
 	},

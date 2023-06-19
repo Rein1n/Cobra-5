@@ -27,6 +27,7 @@ const getrblxuser = {
 				const thumbnail = await noblox.getPlayerThumbnail(id, 720, 'png', false, 'headshot');
 				embed = new EmbedBuilder()
 					.setTitle(`${info.username} (aka ${info.displayName})`)
+					.setColor('#09c82a')
 					.setURL(`https://www.roblox.com/users/${id}`)
 					.setDescription(`${info.blurb}`)
 					.setThumbnail(`${thumbnail.at(0)?.imageUrl}`)
@@ -44,6 +45,7 @@ const getrblxuser = {
 				const thumbnail = await noblox.getPlayerThumbnail(id, 720, 'png', false, 'headshot');
 				embed = new EmbedBuilder()
 					.setTitle(`${info.username} (aka ${info.displayName})`)
+					.setColor('#09c82a')
 					.setURL(`https://www.roblox.com/users/${id}`)
 					.setDescription(`${info.blurb}`)
 					.setThumbnail(`${thumbnail.at(0)?.imageUrl}`)
@@ -58,7 +60,11 @@ const getrblxuser = {
 			await interaction.reply({ embeds: [embed] });
 		}
 		catch (error) {
-			await interaction.reply('User does not exist (Invalid ID/Username).');
+			const badEmbed = new EmbedBuilder()
+				.setTitle('User does not exist')
+				.setColor('#c70a0a')
+				.setDescription('Invalid ID/Username');
+			await interaction.reply({ embeds: [badEmbed] });
 		}
 	},
 };
