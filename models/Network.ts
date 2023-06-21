@@ -2,15 +2,12 @@ import { DataType, Sequelize } from 'sequelize-typescript';
 
 const sequelize = new Sequelize();
 
-const User = sequelize.define('Users', {
-	RblxID: {
+const Network = sequelize.define('Network', {
+	Name: {
 		type: DataType.STRING,
-	},
-	points: {
-		type: DataType.INTEGER,
 	},
 }, {
 	timestamps: false,
 });
 
-export default User;
+export default Network;

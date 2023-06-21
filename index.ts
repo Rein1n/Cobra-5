@@ -16,7 +16,7 @@ import type {
 
 import ping from './commands/ping.js';
 import help from './commands/help.js';
-import getrblxuser from './commands/getrblxuser.js';
+import getrblxuser from './commands/getRblxUser.js';
 import verify from './commands/verify.js';
 const { token, client_id } = process.env;
 const commands = [];

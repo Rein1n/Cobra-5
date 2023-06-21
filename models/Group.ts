@@ -1,14 +1,9 @@
 import { DataType, Sequelize } from 'sequelize-typescript';
 
-const sequelize = new Sequelize('database', 'user', 'password', {
-	host: 'localhost',
-	dialect: 'sqlite',
-	logging: false,
-	storage: 'database.sqlite',
-});
+const sequelize = new Sequelize();
 
 const Group = sequelize.define('Group', {
-	RblxID: {
+	GroupID: {
 		type: DataType.STRING,
 	},
 	GuildID: {
@@ -18,7 +13,4 @@ const Group = sequelize.define('Group', {
 	timestamps: false,
 });
 
-export function groupInit() {
-	Group.sync({ force: true });
-	console.log('Group synced');
-}
+export default Group;
