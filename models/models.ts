@@ -1,7 +1,14 @@
-import { sequelize } from '../index.js';
 import User from './User.js';
 import Group from './Group.js';
 import Network from './Network.js';
+import { Sequelize } from 'sequelize-typescript';
+
+const sequelize = new Sequelize('database', 'user', 'password', {
+	host: 'localhost',
+	dialect: 'sqlite',
+	logging: false,
+	storage: 'database.sqlite',
+});
 
 try {
 	await sequelize.authenticate();
@@ -16,4 +23,11 @@ Network.hasMany(Group);
 User.belongsTo(Group);
 Group.hasMany(User);
 
-module.exports = { Network, Group, User };
+Network.create;
+Group.create;
+User.create;
+await sequelize.sync({ force: true })
+	.catch(error =>
+		console.log(error));
+
+export { Network, Group, User };
