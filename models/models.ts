@@ -1,12 +1,7 @@
-import User from './User.js';
-import Group from './Group.js';
-import Network from './Network.js';
-import { Sequelize } from 'sequelize-typescript';
+import { Sequelize, DataType } from 'sequelize-typescript';
 
-const sequelize = new Sequelize('database', 'user', 'password', {
-	host: 'localhost',
+const sequelize = new Sequelize({
 	dialect: 'sqlite',
-	logging: false,
 	storage: 'database.sqlite',
 });
 
@@ -18,16 +13,47 @@ catch (error) {
 	console.error('Unable to connect to the database:', error);
 }
 
-Group.belongsTo(Network);
-Network.hasMany(Group);
+const Universe = sequelize.define('Universe', {
+	Name: {
+		type: DataType.STRING,
+	},
+}, {
+	timestamps: false,
+});
+
+const Group = sequelize.define('Group', {
+	GroupID: {
+		type: DataType.STRING,
+		allowNull: false,
+	},
+	GuildID: {
+		type: DataType.STRING,
+		allowNull: false,
+	},
+}, {
+	timestamps: false,
+});
+
+const User = sequelize.define('Users', {
+	RblxID: {
+		type: DataType.STRING,
+		allowNull: false,
+	},
+	points: {
+		type: DataType.INTEGER,
+		defaultValue: 0,
+	},
+}, {
+	timestamps: false,
+});
+
+Group.belongsTo(Universe);
+Universe.hasMany(Group);
 User.belongsTo(Group);
 Group.hasMany(User);
 
-Network.create;
-Group.create;
-User.create;
-await sequelize.sync({ force: true })
+await sequelize.sync({ alter: true })
 	.catch(error =>
 		console.log(error));
 
-export { Network, Group, User };
+export { Universe, Group, User };
