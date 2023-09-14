@@ -2,11 +2,11 @@
     "compilerOptions": {
       "lib": ["ESNext"],
       "target": "ESNext",
-      "module": "ESNext",
+      "module": "NodeNext",
       "outDir": "./dist",
       "allowSyntheticDefaultImports": true,
       "esModuleInterop": true,
-      "moduleResolution": "nodenext",
+      "moduleResolution": "NodeNext",
       "declaration": true,
       "sourceMap": true,
       "strict": true
